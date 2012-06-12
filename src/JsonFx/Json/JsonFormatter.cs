@@ -567,9 +567,8 @@ namespace JsonFx.Json
 								continue;
 							}
 							default:
-							{
-								writer.Write("\\u");
-								writer.Write(CharUtility.ConvertToUtf32(value, i).ToString("X4"));
+							{								
+								writer.Write(value[i]);								
 								continue;
 							}
 						}
