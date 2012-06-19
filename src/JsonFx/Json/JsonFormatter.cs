@@ -143,198 +143,198 @@ namespace JsonFx.Json
 					switch (token.TokenType)
 					{
 						case ModelTokenType.ArrayBegin:
-						{
-							if (needsValueDelim)
 							{
-								writer.Write(JsonGrammar.OperatorValueDelim);
-								if (prettyPrint)
+								if (needsValueDelim)
 								{
-									this.WriteLine(writer, depth);
+									writer.Write(JsonGrammar.OperatorValueDelim);
+									if (prettyPrint)
+									{
+										this.WriteLine(writer, depth);
+									}
 								}
-							}
 
-							if (pendingNewLine)
-							{
-								if (prettyPrint)
+								if (pendingNewLine)
 								{
-									this.WriteLine(writer, ++depth);
+									if (prettyPrint)
+									{
+										this.WriteLine(writer, ++depth);
+									}
+									pendingNewLine = false;
 								}
-								pendingNewLine = false;
+								writer.Write(JsonGrammar.OperatorArrayBegin);
+								pendingNewLine = true;
+								needsValueDelim = false;
+								continue;
 							}
-							writer.Write(JsonGrammar.OperatorArrayBegin);
-							pendingNewLine = true;
-							needsValueDelim = false;
-							continue;
-						}
 						case ModelTokenType.ArrayEnd:
-						{
-							if (pendingNewLine)
 							{
-								pendingNewLine = false;
+								if (pendingNewLine)
+								{
+									pendingNewLine = false;
+								}
+								else if (prettyPrint)
+								{
+									this.WriteLine(writer, --depth);
+								}
+								writer.Write(JsonGrammar.OperatorArrayEnd);
+								needsValueDelim = true;
+								continue;
 							}
-							else if (prettyPrint)
-							{
-								this.WriteLine(writer, --depth);
-							}
-							writer.Write(JsonGrammar.OperatorArrayEnd);
-							needsValueDelim = true;
-							continue;
-						}
 						case ModelTokenType.Primitive:
-						{
-							if (needsValueDelim)
 							{
-								writer.Write(JsonGrammar.OperatorValueDelim);
-								if (prettyPrint)
+								if (needsValueDelim)
 								{
-									this.WriteLine(writer, depth);
-								}
-							}
-
-							if (pendingNewLine)
-							{
-								if (prettyPrint)
-								{
-									this.WriteLine(writer, ++depth);
-								}
-								pendingNewLine = false;
-							}
-
-							Type valueType =
-								(token.Value == null) ? null :
-								token.Value.GetType();
-
-							TypeCode typeCode = Type.GetTypeCode(valueType);
-
-							switch (typeCode)
-							{
-								case TypeCode.Boolean:
-								{
-									writer.Write(true.Equals(token.Value) ? JsonGrammar.KeywordTrue : JsonGrammar.KeywordFalse);
-									break;
-								}
-								case TypeCode.Byte:
-								case TypeCode.Decimal:
-								case TypeCode.Double:
-								case TypeCode.Int16:
-								case TypeCode.Int32:
-								case TypeCode.Int64:
-								case TypeCode.SByte:
-								case TypeCode.Single:
-								case TypeCode.UInt16:
-								case TypeCode.UInt32:
-								case TypeCode.UInt64:
-								{
-									if (valueType.IsEnum)
+									writer.Write(JsonGrammar.OperatorValueDelim);
+									if (prettyPrint)
 									{
-										goto default;
+										this.WriteLine(writer, depth);
 									}
+								}
 
-									this.WriteNumber(writer, token.Value, typeCode);
-									break;
-								}
-								case TypeCode.DBNull:
-								case TypeCode.Empty:
+								if (pendingNewLine)
 								{
-									writer.Write(JsonGrammar.KeywordNull);
-									break;
-								}
-								default:
-								{
-									ITextFormattable<ModelTokenType> formattable = token.Value as ITextFormattable<ModelTokenType>;
-									if (formattable != null)
+									if (prettyPrint)
 									{
-										formattable.Format(this, writer);
-										break;
+										this.WriteLine(writer, ++depth);
 									}
-
-									this.WritePrimitive(writer, token.Value);
-									break;
+									pendingNewLine = false;
 								}
+
+								Type valueType =
+									(token.Value == null) ? null :
+									token.Value.GetType();
+
+								TypeCode typeCode = Type.GetTypeCode(valueType);
+
+								switch (typeCode)
+								{
+									case TypeCode.Boolean:
+										{
+											writer.Write(true.Equals(token.Value) ? JsonGrammar.KeywordTrue : JsonGrammar.KeywordFalse);
+											break;
+										}
+									case TypeCode.Byte:
+									case TypeCode.Decimal:
+									case TypeCode.Double:
+									case TypeCode.Int16:
+									case TypeCode.Int32:
+									case TypeCode.Int64:
+									case TypeCode.SByte:
+									case TypeCode.Single:
+									case TypeCode.UInt16:
+									case TypeCode.UInt32:
+									case TypeCode.UInt64:
+										{
+											if (valueType.IsEnum)
+											{
+												goto default;
+											}
+
+											this.WriteNumber(writer, token.Value, typeCode);
+											break;
+										}
+									case TypeCode.DBNull:
+									case TypeCode.Empty:
+										{
+											writer.Write(JsonGrammar.KeywordNull);
+											break;
+										}
+									default:
+										{
+											ITextFormattable<ModelTokenType> formattable = token.Value as ITextFormattable<ModelTokenType>;
+											if (formattable != null)
+											{
+												formattable.Format(this, writer);
+												break;
+											}
+
+											this.WritePrimitive(writer, token.Value);
+											break;
+										}
+								}
+								needsValueDelim = true;
+								continue;
 							}
-							needsValueDelim = true;
-							continue;
-						}
 						case ModelTokenType.ObjectBegin:
-						{
-							if (needsValueDelim)
 							{
-								writer.Write(JsonGrammar.OperatorValueDelim);
-								if (prettyPrint)
+								if (needsValueDelim)
 								{
-									this.WriteLine(writer, depth);
+									writer.Write(JsonGrammar.OperatorValueDelim);
+									if (prettyPrint)
+									{
+										this.WriteLine(writer, depth);
+									}
 								}
-							}
 
-							if (pendingNewLine)
-							{
-								if (prettyPrint)
+								if (pendingNewLine)
 								{
-									this.WriteLine(writer, ++depth);
+									if (prettyPrint)
+									{
+										this.WriteLine(writer, ++depth);
+									}
+									pendingNewLine = false;
 								}
-								pendingNewLine = false;
+								writer.Write(JsonGrammar.OperatorObjectBegin);
+								pendingNewLine = true;
+								needsValueDelim = false;
+								continue;
 							}
-							writer.Write(JsonGrammar.OperatorObjectBegin);
-							pendingNewLine = true;
-							needsValueDelim = false;
-							continue;
-						}
 						case ModelTokenType.ObjectEnd:
-						{
-							if (pendingNewLine)
 							{
-								pendingNewLine = false;
+								if (pendingNewLine)
+								{
+									pendingNewLine = false;
+								}
+								else if (prettyPrint)
+								{
+									this.WriteLine(writer, --depth);
+								}
+								writer.Write(JsonGrammar.OperatorObjectEnd);
+								needsValueDelim = true;
+								continue;
 							}
-							else if (prettyPrint)
-							{
-								this.WriteLine(writer, --depth);
-							}
-							writer.Write(JsonGrammar.OperatorObjectEnd);
-							needsValueDelim = true;
-							continue;
-						}
 						case ModelTokenType.Property:
-						{
-							if (needsValueDelim)
 							{
-								writer.Write(JsonGrammar.OperatorValueDelim);
+								if (needsValueDelim)
+								{
+									writer.Write(JsonGrammar.OperatorValueDelim);
+									if (prettyPrint)
+									{
+										this.WriteLine(writer, depth);
+									}
+								}
+
+								if (pendingNewLine)
+								{
+									if (prettyPrint)
+									{
+										this.WriteLine(writer, ++depth);
+									}
+									pendingNewLine = false;
+								}
+
+								this.WritePropertyName(writer, token.Name.LocalName);
+
 								if (prettyPrint)
 								{
-									this.WriteLine(writer, depth);
+									writer.Write(" ");
+									writer.Write(JsonGrammar.OperatorPairDelim);
+									writer.Write(" ");
 								}
-							}
-
-							if (pendingNewLine)
-							{
-								if (prettyPrint)
+								else
 								{
-									this.WriteLine(writer, ++depth);
+									writer.Write(JsonGrammar.OperatorPairDelim);
 								}
-								pendingNewLine = false;
+								needsValueDelim = false;
+								continue;
 							}
-
-							this.WritePropertyName(writer, token.Name.LocalName);
-
-							if (prettyPrint)
-							{
-								writer.Write(" ");
-								writer.Write(JsonGrammar.OperatorPairDelim);
-								writer.Write(" ");
-							}
-							else
-							{
-								writer.Write(JsonGrammar.OperatorPairDelim);
-							}
-							needsValueDelim = false;
-							continue;
-						}
 						case ModelTokenType.None:
 						default:
-						{
-							throw new TokenException<ModelTokenType>(
-								token,
-								String.Format(ErrorUnexpectedToken, token.TokenType));
-						}
+							{
+								throw new TokenException<ModelTokenType>(
+									token,
+									String.Format(ErrorUnexpectedToken, token.TokenType));
+							}
 					}
 				}
 			}
@@ -367,119 +367,119 @@ namespace JsonFx.Json
 				switch (typeCode)
 				{
 					case TypeCode.Byte:
-					{
-						number = ((byte)value).ToString("g", CultureInfo.InvariantCulture);
-						break;
-					}
+						{
+							number = ((byte)value).ToString("g", CultureInfo.InvariantCulture);
+							break;
+						}
 					case TypeCode.Boolean:
-					{
-						number = true.Equals(value) ? "1" : "0";
-						break;
-					}
+						{
+							number = true.Equals(value) ? "1" : "0";
+							break;
+						}
 					case TypeCode.Decimal:
-					{
-						overflowsIEEE754 = true;
-						number = ((decimal)value).ToString("g", CultureInfo.InvariantCulture);
-						break;
-					}
+						{
+							overflowsIEEE754 = true;
+							number = ((decimal)value).ToString("g", CultureInfo.InvariantCulture);
+							break;
+						}
 					case TypeCode.Double:
-					{
-						double doubleValue = (double)value;
-
-						if (Double.IsNaN(doubleValue))
 						{
-							this.WriteNaN(writer);
-							return;
-						}
+							double doubleValue = (double)value;
 
-						if (Double.IsInfinity(doubleValue))
-						{
-							if (Double.IsNegativeInfinity(doubleValue))
+							if (Double.IsNaN(doubleValue))
 							{
-								this.WriteNegativeInfinity(writer);
+								this.WriteNaN(writer);
+								return;
 							}
-							else
-							{
-								this.WritePositiveInfinity(writer);
-							}
-							return;
-						}
 
-						// round-trip format has a few more digits than general
-						// http://msdn.microsoft.com/en-us/library/dwhawy9k.aspx#RFormatString
-						number = doubleValue.ToString("r", CultureInfo.InvariantCulture);
-						break;
-					}
+							if (Double.IsInfinity(doubleValue))
+							{
+								if (Double.IsNegativeInfinity(doubleValue))
+								{
+									this.WriteNegativeInfinity(writer);
+								}
+								else
+								{
+									this.WritePositiveInfinity(writer);
+								}
+								return;
+							}
+
+							// round-trip format has a few more digits than general
+							// http://msdn.microsoft.com/en-us/library/dwhawy9k.aspx#RFormatString
+							number = doubleValue.ToString("r", CultureInfo.InvariantCulture);
+							break;
+						}
 					case TypeCode.Int16:
-					{
-						number = ((short)value).ToString("g", CultureInfo.InvariantCulture);
-						break;
-					}
+						{
+							number = ((short)value).ToString("g", CultureInfo.InvariantCulture);
+							break;
+						}
 					case TypeCode.Int32:
-					{
-						number = ((int)value).ToString("g", CultureInfo.InvariantCulture);
-						break;
-					}
+						{
+							number = ((int)value).ToString("g", CultureInfo.InvariantCulture);
+							break;
+						}
 					case TypeCode.Int64:
-					{
-						overflowsIEEE754 = true;
-						number = ((long)value).ToString("g", CultureInfo.InvariantCulture);
-						break;
-					}
+						{
+							overflowsIEEE754 = true;
+							number = ((long)value).ToString("g", CultureInfo.InvariantCulture);
+							break;
+						}
 					case TypeCode.SByte:
-					{
-						number = ((sbyte)value).ToString("g", CultureInfo.InvariantCulture);
-						break;
-					}
+						{
+							number = ((sbyte)value).ToString("g", CultureInfo.InvariantCulture);
+							break;
+						}
 					case TypeCode.Single:
-					{
-						float floatValue = (float)value;
-
-						if (Single.IsNaN(floatValue))
 						{
-							this.WriteNaN(writer);
-							return;
-						}
+							float floatValue = (float)value;
 
-						if (Single.IsInfinity(floatValue))
-						{
-							if (Single.IsNegativeInfinity(floatValue))
+							if (Single.IsNaN(floatValue))
 							{
-								this.WriteNegativeInfinity(writer);
+								this.WriteNaN(writer);
+								return;
 							}
-							else
-							{
-								this.WritePositiveInfinity(writer);
-							}
-							return;
-						}
 
-						// round-trip format has a few more digits than general
-						// http://msdn.microsoft.com/en-us/library/dwhawy9k.aspx#RFormatString
-						number = floatValue.ToString("r", CultureInfo.InvariantCulture);
-						break;
-					}
+							if (Single.IsInfinity(floatValue))
+							{
+								if (Single.IsNegativeInfinity(floatValue))
+								{
+									this.WriteNegativeInfinity(writer);
+								}
+								else
+								{
+									this.WritePositiveInfinity(writer);
+								}
+								return;
+							}
+
+							// round-trip format has a few more digits than general
+							// http://msdn.microsoft.com/en-us/library/dwhawy9k.aspx#RFormatString
+							number = floatValue.ToString("r", CultureInfo.InvariantCulture);
+							break;
+						}
 					case TypeCode.UInt16:
-					{
-						number = ((ushort)value).ToString("g", CultureInfo.InvariantCulture);
-						break;
-					}
+						{
+							number = ((ushort)value).ToString("g", CultureInfo.InvariantCulture);
+							break;
+						}
 					case TypeCode.UInt32:
-					{
-						overflowsIEEE754 = true;
-						number = ((uint)value).ToString("g", CultureInfo.InvariantCulture);
-						break;
-					}
+						{
+							overflowsIEEE754 = true;
+							number = ((uint)value).ToString("g", CultureInfo.InvariantCulture);
+							break;
+						}
 					case TypeCode.UInt64:
-					{
-						overflowsIEEE754 = true;
-						number = ((ulong)value).ToString("g", CultureInfo.InvariantCulture);
-						break;
-					}
+						{
+							overflowsIEEE754 = true;
+							number = ((ulong)value).ToString("g", CultureInfo.InvariantCulture);
+							break;
+						}
 					default:
-					{
-						throw new TokenException<ModelTokenType>(ModelGrammar.TokenPrimitive(value), "Invalid number token");
-					}
+						{
+							throw new TokenException<ModelTokenType>(ModelGrammar.TokenPrimitive(value), "Invalid number token");
+						}
 				}
 
 				if (overflowsIEEE754 && this.InvalidIEEE754(Convert.ToDecimal(value)))
@@ -516,7 +516,7 @@ namespace JsonFx.Json
 
 				writer.Write(JsonGrammar.OperatorStringDelim);
 
-				for (int i=start; i<length; i++)
+				for (int i = start; i < length; i++)
 				{
 					char ch = value[i];
 
@@ -528,56 +528,64 @@ namespace JsonFx.Json
 					{
 						if (i > start)
 						{
-							writer.Write(value.Substring(start, i-start));
+							writer.Write(value.Substring(start, i - start));
 						}
-						start = i+1;
+						start = i + 1;
 
 						switch (ch)
 						{
 							case JsonGrammar.OperatorStringDelim:
 							case JsonGrammar.OperatorCharEscape:
-							{
-								writer.Write(JsonGrammar.OperatorCharEscape);
-								writer.Write(ch);
-								continue;
-							}
+								{
+									writer.Write(JsonGrammar.OperatorCharEscape);
+									writer.Write(ch);
+									continue;
+								}
 							case '\b':
-							{
-								writer.Write("\\b");
-								continue;
-							}
+								{
+									writer.Write("\\b");
+									continue;
+								}
 							case '\f':
-							{
-								writer.Write("\\f");
-								continue;
-							}
+								{
+									writer.Write("\\f");
+									continue;
+								}
 							case '\n':
-							{
-								writer.Write("\\n");
-								continue;
-							}
+								{
+									writer.Write("\\n");
+									continue;
+								}
 							case '\r':
-							{
-								writer.Write("\\r");
-								continue;
-							}
+								{
+									writer.Write("\\r");
+									continue;
+								}
 							case '\t':
-							{
-								writer.Write("\\t");
-								continue;
-							}
+								{
+									writer.Write("\\t");
+									continue;
+								}
 							default:
-							{								
-								writer.Write(value[i]);								
-								continue;
-							}
+								{
+									var charValue = (int)value[i];
+									if (charValue < 32 || charValue > 127)
+									{
+										writer.Write(string.Format("\\u{0:X04}", charValue));
+									}
+									else
+									{
+										writer.Write(value[i]);
+									}									
+									continue;
+								}
 						}
 					}
 				}
 
 				if (length > start)
 				{
-					writer.Write(value.Substring(start, length-start));
+					writer.Write(value.Substring(start, length - start));
 				}
 
 				writer.Write(JsonGrammar.OperatorStringDelim);
@@ -587,7 +595,7 @@ namespace JsonFx.Json
 			{
 				// emit CRLF
 				writer.Write(this.Settings.NewLine);
-				for (int i=0; i<depth; i++)
+				for (int i = 0; i < depth; i++)
 				{
 					// indent next line accordingly
 					writer.Write(this.Settings.Tab);
@@ -632,7 +640,7 @@ namespace JsonFx.Json
 				{
 					Enum[] flags = JsonFormatter.GetFlagList(type, value);
 					string[] flagNames = new string[flags.Length];
-					for (int i=0; i<flags.Length; i++)
+					for (int i = 0; i < flags.Length; i++)
 					{
 						if (!map.TryGetValue(flags[i], out flagNames[i]) ||
 							String.IsNullOrEmpty(flagNames[i]))
@@ -682,7 +690,7 @@ namespace JsonFx.Json
 					return enums.ToArray();
 				}
 
-				for (int i = enumValues.Length-1; i >= 0; i--)
+				for (int i = enumValues.Length - 1; i >= 0; i--)
 				{
 					ulong enumValue = Convert.ToUInt64(enumValues.GetValue(i));
 
